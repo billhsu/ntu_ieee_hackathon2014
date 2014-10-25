@@ -1,19 +1,15 @@
 <body>
-    <video id="video" width="320" height="240" autoplay></video>
-    <button id="snap1">Snap Photo1</button>
-    <canvas id="canvas1" width="320" height="240"></canvas>
-    <button id="snap2">Snap Photo2</button>
-    <canvas id="canvas2" width="320" height="240"></canvas>
-    <button id="calc">Calculate ring size</button>
-
+    <video id="video" width="1" height="1" autoplay></video>
+    <canvas id="canvas_stream" width="640" height="480"></canvas>
+    <button id="calc1">Calculate ring size1</button>
+    <button id="calc2">Calculate ring size2</button>
+    <button id="calc3">Calculate ring size</button>
     <script>
     // Put event listeners into place
     window.addEventListener("DOMContentLoaded", function() {
         // Grab elements, create settings, etc.
-        var canvas1 = document.getElementById("canvas1"),
-            context1 = canvas1.getContext("2d"),
-            canvas2 = document.getElementById("canvas2"),
-            context2 = canvas2.getContext("2d"),
+        var canvas_stream = document.getElementById("canvas_stream"),
+            context_stream = canvas_stream.getContext("2d"),
             video = document.getElementById("video"),
             videoObj = {
                 "video": true
@@ -21,7 +17,9 @@
             errBack = function(error) {
                 console.log("Video capture error: ", error.code);
             };
-
+        context_stream.translate(canvas_stream.width, 0);
+        // flip canvas_stream horizontally 
+        context_stream.scale(-1, 1);
         // Put video listeners into place
         if (navigator.getUserMedia) { // Standard
             navigator.getUserMedia(videoObj, function(stream) {
@@ -41,17 +39,34 @@
         }
 
         // Trigger photo take
-        document.getElementById("snap1").addEventListener("click", function() {
-            context1.drawImage(video, 0, 0, 320, 240);
+        document.getElementById("calc1").addEventListener("click", function() {
+            var imgData = context_stream.getImageData(0, 0, 640, 480).data;
+            var startPoint = 347 * 640 * 4 + 490 * 4;
+            var endPoint = 347 * 640 * 4 + 590 * 4
+            for (var i = startPoint; i < end; i += 4) {
+                imgData.data[i] = 255 - imgData.data[i];
+                imgData.data[i + 1] = 255 - imgData.data[i + 1];
+                imgData.data[i + 2] = 255 - imgData.data[i + 2];
+                imgData.data[i + 3] = 255;
+            }
         });
         // Trigger photo take
-        document.getElementById("snap2").addEventListener("click", function() {
-            context2.drawImage(video, 0, 0, 320, 240);
+        document.getElementById("calc2").addEventListener("click", function() {
+            var image = context_stream.getImageData(0, 0, 640, 480).data;
         });
 
-        document.getElementById("calc").addEventListener("click", function() {
-            alert('');
-        });
+        setInterval(function() {
+            context_stream.drawImage(video, 0, 0, 640, 480);
+            context_stream.lineWidth = "1";
+            context_stream.strokeStyle = "green";
+            context_stream.rect((320 - 171), (240 - 108), 171 * 2, 108 * 2);
+            context_stream.stroke();
+            context_stream.beginPath();
+            context_stream.strokeStyle = "red";
+            context_stream.moveTo(640 - (320 - 171), 240 + 108);
+            context_stream.lineTo(640 - (320 - 171) + 100, 240 + 108);
+            context_stream.stroke();
+        }, 100);
     }, false);
     </script>
 </body>
