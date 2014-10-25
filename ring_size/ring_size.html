@@ -1,0 +1,57 @@
+<body>
+    <video id="video" width="320" height="240" autoplay></video>
+    <button id="snap1">Snap Photo1</button>
+    <canvas id="canvas1" width="320" height="240"></canvas>
+    <button id="snap2">Snap Photo2</button>
+    <canvas id="canvas2" width="320" height="240"></canvas>
+    <button id="calc">Calculate ring size</button>
+
+    <script>
+    // Put event listeners into place
+    window.addEventListener("DOMContentLoaded", function() {
+        // Grab elements, create settings, etc.
+        var canvas1 = document.getElementById("canvas1"),
+            context1 = canvas1.getContext("2d"),
+            canvas2 = document.getElementById("canvas2"),
+            context2 = canvas2.getContext("2d"),
+            video = document.getElementById("video"),
+            videoObj = {
+                "video": true
+            },
+            errBack = function(error) {
+                console.log("Video capture error: ", error.code);
+            };
+
+        // Put video listeners into place
+        if (navigator.getUserMedia) { // Standard
+            navigator.getUserMedia(videoObj, function(stream) {
+                video.src = stream;
+                video.play();
+            }, errBack);
+        } else if (navigator.webkitGetUserMedia) { // WebKit-prefixed
+            navigator.webkitGetUserMedia(videoObj, function(stream) {
+                video.src = window.webkitURL.createObjectURL(stream);
+                video.play();
+            }, errBack);
+        } else if (navigator.mozGetUserMedia) { // WebKit-prefixed
+            navigator.mozGetUserMedia(videoObj, function(stream) {
+                video.src = window.URL.createObjectURL(stream);
+                video.play();
+            }, errBack);
+        }
+
+        // Trigger photo take
+        document.getElementById("snap1").addEventListener("click", function() {
+            context1.drawImage(video, 0, 0, 320, 240);
+        });
+        // Trigger photo take
+        document.getElementById("snap2").addEventListener("click", function() {
+            context2.drawImage(video, 0, 0, 320, 240);
+        });
+
+        document.getElementById("calc").addEventListener("click", function() {
+            alert('');
+        });
+    }, false);
+    </script>
+</body>
