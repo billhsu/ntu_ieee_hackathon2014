@@ -342,7 +342,7 @@
             <br>grayscale: 1ms
             <br>gauss blur: 5ms
             <br>canny edge: 11ms</div>
-        <button id="calc_x">Calculate finger size_x</button>
+        <button id="calc_x">Calculate ring size</button>
         <button id="clear">Clear</button>
     </div>
 
@@ -486,7 +486,7 @@
 
                 ctx.lineWidth = "2";
                 ctx.strokeStyle = "yellow";
-                ctx.rect((640 - 171) / 2, (480 - 108) / 2, 171, 108);
+                ctx.rect((640 - 171) / 2, (480 - 108) / 2 + 100, 171, 108);
                 ctx.stroke();
                 ctx.beginPath();
                 ctx.strokeStyle = "red";
@@ -494,7 +494,7 @@
                 ctx.lineTo(640 - (640 - 171) / 2 + 100, 300 + 108 / 2 + 5);
                 ctx.stroke();
 
-                $('#log').html(stat.log() + "<br>finger_diameter: " + finger_diameter + "<br>Ring Size(USA): " + ring_size);
+                $('#log').html("<br>finger_diameter: " + finger_diameter + "<br>Ring Size(USA): " + ring_size);
             }
         }
         document.getElementById("calc_x").addEventListener("click", function() {
@@ -510,13 +510,13 @@
                     skin_start_pos = (i / 4) % 640;
                     skin_end_pos = skin_start_pos;
                 }
-                if (skin_started && imgData[i] == 255) {
+                if (skin_started && imgData[i] == 255 && (i / 4) % 640 - skin_start_pos < 60) {
                     skin_end_pos = (i / 4) % 640;
                 }
             }
             console.log(skin_end_pos - skin_start_pos);
-            if (finger_diameter == 0.0) finger_diameter = (skin_end_pos - skin_start_pos) / 2;
-            else finger_diameter = (skin_end_pos - skin_start_pos) / 4 + finger_diameter / 2;
+            finger_diameter = (skin_end_pos - skin_start_pos) / 2;
+
             for (var i = 0; i < ring_dia_arr.length; ++i) {
                 if (finger_diameter <= ring_dia_arr[i]) {
                     ring_size = ring_usa_size[i];
