@@ -1,0 +1,18 @@
+.ring-display{
+
+	color: yellow;
+	background-color: white;
+  	font-family:arial;
+	font-weight: bold;
+ 	font-size: 10pt;
+	margin-left: 20px; 
+}
+
+.ring-login{
+	font-color: grey;
+	font-family:arial;
+	font-size: 8pt;
+	font-weight: bold;
+	float: right;
+	display:inline-block;
+}
